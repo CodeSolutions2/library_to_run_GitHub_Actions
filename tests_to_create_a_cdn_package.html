@@ -1,1 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
 
+
+<input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
+<button id="run_selection" onclick="run_selection()">Run Selection</button>
+
+
+<!-- --------------------------------------------------- -->
+
+<!-- Way 0 -->
+<!-- <script type="text/javascript" src="library_to_run_GitHub_Actions.js"></script>
+
+<!-- Way 1 -->
+<!-- <script type="module">
+import { run_backend_process } from "./library_to_run_GitHub_Actions.js";
+module.run_backend_process = run_backend_process;
+</script>
+
+<!-- Way 2 -->
+<script type="module" src="./index.js"></script>
+  
+<!-- --------------------------------------------------- -->	  
+
+	
+<script>
+  
+// -----------------------------------------------
+
+// Way 1
+// const module = {};
+
+// -----------------------------------------------
+  
+async function run_selection() {
+
+	var RepoAobj = {};
+  
+  RepoAobj.repoOwner = 'CodeSolutions2';
+	RepoAobj.repoA_name = 'library_to_run_GitHub_Actions';
+  RepoAobj.foldername = 'webapp0'; // foldername in RepoB
+
+  // RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername
+	
+	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
+	RepoAobj.input = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
+	RepoAobj.repoB_name = 'frontend_backend_message_passing_central_repository_v1';
+
+  // await module.run_backend_process(RepoAobj); // Way 1
+	await run_backend_process(RepoAobj);
+
+	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input, RepoAobj.repoB_name
+
+}
+
+// -----------------------------------------------
+
+
+
+</script>
+
+  
+</body>
+</html>
