@@ -1,15 +1,16 @@
 export async function run_backend_process(RepoAobj) {
 
-	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input, RepoAobj.repoB_name
+	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input, RepoAobj.repoB_name, RepoAobj.repoOwner
 	
 	// n is the maximum salt length used
 	
-	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repoB_name);
+	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repoB_name, RepoAobj.repoOwner);
 	
 	var obj = {env_text: obj_env.text.replace(/[\n\s]/g, ""), 
 		   env_file_download_url: obj_env.file_download_url, 
 		   env_sha: obj_env.sha, 
-		   n: 1, 
+		   n: 1,
+		   repoOwner: RepoAobj.repoOwner,
 		   filename: RepoAobj.filename, 
 		   foldername: RepoAobj.foldername, 
 		   input_text: RepoAobj.input, 
@@ -30,7 +31,7 @@ async function run_backend(obj) {
 	// console.log('obj.repoB_name: ', obj.repoB_name);
 	
 	// [0] Determine if filename exists
-	var obj_temp = await GET_fileDownloadUrl_and_sha(obj.filename, obj.foldername, obj.repoB_name)
+	var obj_temp = await GET_fileDownloadUrl_and_sha(obj.filename, obj.foldername, obj.repoB_name, obj.repoOwner)
 
 	// [1] Add obj_env and obj_temp to the general object (obj)
 	// obj.env_text
@@ -63,12 +64,12 @@ async function run_backend(obj) {
 					
 					if (obj.temp_file_download_url == "No_file_found") {
 						// Option 0: create a new file
-					  	obj.status = await PUT_create_a_file_RESTAPI(obj.auth, 'run GitHub Action', obj.input_text, obj.foldername+"/"+obj.filename, obj.repoB_name)
+					  	obj.status = await PUT_create_a_file_RESTAPI(obj.auth, 'run GitHub Action', obj.input_text, obj.foldername+"/"+obj.filename, obj.repoB_name, obj.repoOwner)
 					 		.then(async function(out) { obj.auth = ""; return out.status; })
 		 			 		.catch(error => { console.log("error: ", error); });
 			 		} else {
 						// Option 1: modify an existing file
-				 	 	obj.status = await PUT_add_to_a_file_RESTAPI(obj.auth, 'run GitHub Action', obj.input_text, obj.temp_desired_path, obj.temp_sha, obj.repoB_name)
+				 	 	obj.status = await PUT_add_to_a_file_RESTAPI(obj.auth, 'run GitHub Action', obj.input_text, obj.temp_desired_path, obj.temp_sha, obj.repoB_name, obj.repoOwner)
 					 		.then(async function(out) { obj.auth = ""; return out.status; })
 		 			 		.catch(error => { console.log("error: ", error); });
 			 		}
@@ -163,10 +164,10 @@ async function descramble_ver1(var3_str) {
 // SUBFUNCTIONS
 // ----------------------------------------------------
 
-async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName) {
+async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
 	
 	// PUT content into a new file
-	var url = `https://api.github.com/repos/CodeSolutions2/${repoName}/contents/${desired_path}`;
+	var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
 	var data = {"message": message, "committer":{"name":"App name","email":"App email"}, "content": btoa(content)};
 	var headers = {"Accept": "application/vnd.github+json", "Authorization": `Bearer ${auth}`, "X-GitHub-Api-Version": "2022-11-28"};
 	var options = {method : 'PUT', headers: headers, body : JSON.stringify(data)};
@@ -179,10 +180,10 @@ async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, r
 // ----------------------------------------------------
 
 
-async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName) {
+async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
 	
 	// PUT content into an existing file
-	let url = `https://api.github.com/repos/CodeSolutions2/${repoName}/contents/${desired_path}`;
+	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
 	var data = {"message": message, "committer":{"name":"App name","email":"App email"}, "content": btoa(content), "sha": sha};
 	var headers = {"Accept": "application/vnd.github+json", "Authorization": `Bearer ${auth}`, "X-GitHub-Api-Version": "2022-11-28"};
 	var options = {method : 'PUT', headers: headers, body : JSON.stringify(data)};
@@ -193,9 +194,9 @@ async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, s
 	
 // ----------------------------------------------------
 
-async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name) {
+async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
-	return await GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name)
+	return await GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner)
 		.then(async function (obj) {
 			var text = "";
 			if (obj.file_download_url != ["No_file_found"]) {
@@ -211,10 +212,10 @@ async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desir
 
 // ----------------------------------------------------
 
-async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name) {
+async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
 	// Returns an object of values that are an array
-	var url = `https://api.github.com/repos/CodeSolutions2/${repoB_name}/contents`;
+	var url = `https://api.github.com/repos/${repoOwner}/${repoB_name}/contents`;
 	// console.log('url: ', url);
 
 	var data = await fetch(url).then(res => res.json());
