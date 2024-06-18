@@ -20,7 +20,7 @@ module.run_backend_process = run_backend_process;
 </script>
 
 <!-- Way 2 -->
-<script type="module" src="./dist/index.js"></script>
+<script type="module" src="./index.js"></script>
   
 <!-- --------------------------------------------------- -->	  
 
@@ -33,20 +33,21 @@ module.run_backend_process = run_backend_process;
 // const module = {};
 
 // -----------------------------------------------
-  
+
 async function run_selection() {
 
+	// This function creates a file called cb.txt in a folder named webapp in a repository named RepoB. The file cb.txt contains the string assigned to RepoAobj.input.
 	var RepoAobj = {};
   
   	RepoAobj.repoOwner = 'CodeSolutions2';
 	RepoAobj.repoA_name = 'library_to_run_GitHub_Actions';
-  	RepoAobj.foldername = 'webappb'; // foldername in RepoB
+  	RepoAobj.foldername = 'webapp'; // foldername in RepoB
 
   	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername
 	
 	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
 	RepoAobj.input = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
-	RepoAobj.repoB_name = 'frontend_backend_message_passing_central_repository_v1';
+	RepoAobj.repoB_name = 'RepoB';
 
   	// await module.run_backend_process(RepoAobj); // Way 1
 	await run_backend_process(RepoAobj);
