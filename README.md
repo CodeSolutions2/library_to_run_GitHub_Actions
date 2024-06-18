@@ -11,7 +11,7 @@ The purpose of using an intermediate repository, RepoB, is to allow for security
 
 ## Example of library usage
 
-Inside index.html the following function is called. define names of: Github owner, RepoA, RepoB, the folder to put the created file inside of RepoB, the file to create in RepoB, the text to put inside the created file. This file will be in RepoA.
+Inside index.html the following function is called, also different ways in which to import the library are given. Define names of the following variables: Github owner, RepoA, RepoB, the folder to put the created file inside of RepoB, the file to create in RepoB, the text to put inside the created file. This file will be in RepoA.
 
 async function run_selection() {
 
