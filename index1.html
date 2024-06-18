@@ -38,17 +38,17 @@ async function run_selection() {
 
 	var RepoAobj = {};
   
-  RepoAobj.repoOwner = 'CodeSolutions2';
+  	RepoAobj.repoOwner = 'CodeSolutions2';
 	RepoAobj.repoA_name = 'library_to_run_GitHub_Actions';
-  RepoAobj.foldername = 'webappb'; // foldername in RepoB
+  	RepoAobj.foldername = 'webappb'; // foldername in RepoB
 
-  // RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername
+  	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername
 	
-	RepoAobj.filename = "file_database.csv"; // 'cb.txt'; // filename to create in RepoB, in foldername
-	RepoAobj.input = ""; // document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
+	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
+	RepoAobj.input = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
 	RepoAobj.repoB_name = 'frontend_backend_message_passing_central_repository_v1';
 
-  // await module.run_backend_process(RepoAobj); // Way 1
+  	// await module.run_backend_process(RepoAobj); // Way 1
 	await run_backend_process(RepoAobj);
 
 	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input, RepoAobj.repoB_name
