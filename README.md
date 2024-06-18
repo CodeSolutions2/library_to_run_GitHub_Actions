@@ -22,7 +22,7 @@ async function run_selection() {
 	RepoAobj.foldername = 'webapp'; // foldername in RepoB	
 	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
 	RepoAobj.input = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
-	RepoAobj.repoB_name = 'RepoB';
+	RepoAobj.repoB_name = 'frontend_backend_message_passing_central_repository_v1';
 
 	// await module.run_backend_process(RepoAobj); // Way 1
 	await run_backend_process(RepoAobj);
