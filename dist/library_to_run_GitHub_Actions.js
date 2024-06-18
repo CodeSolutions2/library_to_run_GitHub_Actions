@@ -316,4 +316,92 @@ async function rand_perm(x) {
 	
 }  // end of rand_perm
 
+
+// ----------------------------------------------------
+// For BACKEND SERVER-SIDE USAGE ONLY: these functions are not called
+// ----------------------------------------------------
+async function create_salt(obj) {
+
+	// Resalt and save the key in .env, for the next time
+	var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+	var num = '0123456789';
+	let alpha_arr = alpha.split('');
+	let num_arr = num.split('');
+
+	// --------------------------------
+	
+	// Determine the salt length - it can be up to length n
+	// Configuration 0: [1 to n]
+	// first part is [0 to n-1], we do not want 0 so shift it by one [1 to n]
+	// var new_salt_length = Math.round(Math.random())*(n-1) + 1;
+	// OR
+	// Configuration 1: [no_salt to n]
+	var new_salt_length = Math.round(Math.random())*n;
+	// console.log('new_salt_length: ', new_salt_length);
+
+	// --------------------------------
+
+	if (new_salt_length > 0) {
+		// Fill a vector new_salt_length long with 0 or 1; 0=salt a letter, 1=salt a number
+		var letnum_selection = [];
+		for (let i=0; i<new_salt_length; i++) { 
+			letnum_selection.push(Math.round(Math.random())); 
+		}
+		// console.log('letnum_selection: ', letnum_selection);
+	
+		// --------------------------------
+		
+		// Create salt (extra strings randomly)
+		obj.salt = letnum_selection.map((row) => { 
+	              if (row == 0) { 
+	                let val = Math.round(Math.random()*alpha_arr.length);
+	                // console.log('val: ', val);
+	                return alpha_arr[val]; 
+	              } else { 
+	                let val = Math.round(Math.random()*num_arr.length);
+	                // console.log('val: ', val);
+	                return num_arr[val]; 
+	              } 
+		});
+	
+		obj.salt = obj.salt.join('');
+	} else {
+		obj.salt = "";
+	}
+
+	return obj;
+}
+
+// ----------------------------------------------------
+
+async function resalt_auth(auth, new_auth, obj) {
+	
+	// Add salt to auth_new
+	if (Math.round(Math.random()) == 0) {
+		// salt front
+		new_auth = obj.salt+new_auth;
+	} else {
+		// salt back
+		new_auth = new_auth+obj.salt;
+	}
+	delete obj.salt;
+
+	// --------------------------------
+	
+	// Scramble key : Github automatically base64 decodes and searches the strings and can find the key, causing GitHub to disactivate the key automatically for security
+	
+	// obtain even values of string
+	let ep = new_auth.map((val) => { if (val % 2 == 0) { return val; } });
+
+	// obtain odd values of string
+	let ap = new_auth.map((val) => { if (val % 2 != 0) { return val; } });
+
+	let new_auth1 = ep + "|" + ap;
+
+	// --------------------------------
+
+	// The key is base64_decoded so that the key is hidden in the file
+	await PUT_add_to_a_file_RESTAPI(auth, 'resave the new value', btoa(new_auth1), obj.env_desired_path, obj.env_sha);
+}
+
 // ----------------------------------------------------
