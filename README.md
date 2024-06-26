@@ -15,13 +15,13 @@ Inside index.html the following function is called, also different ways in which
 
 async function run_selection() {
 
-	// This function creates a file called cb.txt in a folder named webapp in a repository named RepoB. The file cb.txt contains the string assigned to RepoAobj.input.
+	// This function creates a file called cb.txt in a folder named webapp in a repository named RepoB. The file cb.txt contains the string assigned to RepoAobj.input_text.
 	var RepoAobj = {};
 	RepoAobj.repoOwner = 'CodeSolutions2';
 	RepoAobj.repoA_name = 'library_to_run_GitHub_Actions';
 	RepoAobj.foldername = 'webapp'; // foldername in RepoB	
 	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
-	RepoAobj.input = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
+	RepoAobj.input_text = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
 	RepoAobj.repoB_name = 'frontend_backend_message_passing_central_repository_v1';
 
 	// await module.run_backend_process(RepoAobj); // Way 1
