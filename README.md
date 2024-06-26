@@ -1,8 +1,11 @@
 # library_to_run_GitHub_Actions
 
-The purpose of this JavaScript library is to launch Backend processes on GitHub Actions, for Frontend web applications on GitHub Pages.
+The purpose of this JavaScript library is to launch Backend processes on GitHub Actions, for Frontend web applications on GitHub Pages. It contains functions that are useful to create web applications using GitHub Pages (a Frontend web application). When calling a model or a database to process a user's input request, the developer must submit the user's data to the model or database using the web application/company keys/tokens on behalf of the user; keys/tokens can either be used from GitHub Secrets on the Backend or they can be encrypted and stored in a file in the repository (ie: Frontend). 
 
-The library creates a file in a folder containing data from the Frontend web application (RepoA), in any repository (RepoB) using it's repository file content key.  The library is called from RepoA on GitHub Pages, it decrypts the repository file content key of RepoB, creates a file with the the user input in RepoB, and can then re-encrypt the key for RepoB. 
+## Specific library function
+The library creates a file, in a folder, containing data from the Frontend web application (RepoA), in any repository (RepoB) using RepoB's repository file content key.  The library is called from RepoA on GitHub Pages, it decrypts the repository file content key of RepoB, creates a file with the the user input in RepoB, and can then re-encrypt the key for RepoB. 
+
+![alt_text](RepoA_RepoB.png)
 
 The intention of the library is to use it with GitHub Actions. When the library creates the file in RepoB, a GitHub Actions script will automatically trigger to either run a process on the user's input or trigger another repository's (ie: RepoA) GitHub Actions script to run. 
 
@@ -31,7 +34,9 @@ async function run_selection() {
 
 RepoB should have the following file structure:
 - .github
-  - .env
+  - .env (encrypted key of RepoB inside)
 - README.md (optional)
 
-Inside of .env put a github token (with repository file content read and write permission) that is base64 encoded, salted (additional strings added), and scrambled (see additional functions create_salt and resalt_auth that should be REMOVED AND PUT ON THE BACKEND SERVER-SIDE). Feel free to add a more secure protocol for token encrypton and modify the decode_desalt function, this library framework uses a basic example of making a token non-visible.
+Inside of .env put a github token (with repository file content read and write permission) that is base64 encoded, salted (additional strings added), and scrambled (see additional functions create_salt and resalt_auth that should be REMOVED AND PUT ON THE BACKEND SERVER-SIDE). Feel free to add a more secure protocol for token encrypton and modify the decode_desalt function, this library framework uses a basic example of making a token non-visible. 
+
+GitHub recommends using [libsodium-wrappers](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28) to salt and encrypt keys. 
