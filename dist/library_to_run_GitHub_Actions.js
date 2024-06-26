@@ -1,6 +1,6 @@
 export async function run_backend_process(RepoAobj) {
 
-	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input, RepoAobj.repoB_name, RepoAobj.repoOwner
+	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input_text, RepoAobj.repoB_name, RepoAobj.repoOwner
 	
 	// n is the maximum salt length used
 	
@@ -13,7 +13,7 @@ export async function run_backend_process(RepoAobj) {
 		   repoOwner: RepoAobj.repoOwner,
 		   filename: RepoAobj.filename, 
 		   foldername: RepoAobj.foldername, 
-		   input_text: RepoAobj.input, 
+		   input_text: RepoAobj.input_text, 
 		   repoB_name: RepoAobj.repoB_name};
 
 	Object.freeze(obj.env_text); // make the original value non-changeable
