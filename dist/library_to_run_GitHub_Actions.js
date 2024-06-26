@@ -104,7 +104,7 @@ async function run_backend(obj) {
 
 // ----------------------------------------------------
 
-async function decode_desalt(obj, x_i) {
+export async function decode_desalt(obj, x_i) {
 	
 	// 0. Decode the Base64-encoded string --> obtain the salted data in binary string format
 	const var0_str = atob(obj.env_text);
@@ -164,7 +164,7 @@ async function descramble_ver1(var3_str) {
 // SUBFUNCTIONS
 // ----------------------------------------------------
 
-async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
+export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
 	
 	// PUT content into a new file
 	var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
@@ -180,7 +180,7 @@ async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, r
 // ----------------------------------------------------
 
 
-async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
+export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
 	
 	// PUT content into an existing file
 	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
@@ -194,7 +194,7 @@ async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, s
 	
 // ----------------------------------------------------
 
-async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
+export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
 	return await GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner)
 		.then(async function (obj) {
@@ -212,7 +212,7 @@ async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desir
 
 // ----------------------------------------------------
 
-async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner) {
+export async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
 	// Returns an object of values that are an array
 	var url = `https://api.github.com/repos/${repoOwner}/${repoB_name}/contents`;
@@ -300,7 +300,7 @@ async function get_number(x) {
 	return x[Math.round(x.length*Math.random())-1];
 }
 	  
-async function rand_perm(x) {
+export async function rand_perm(x) {
 
 	var out = [];
 	while (out.length != x.length) {
