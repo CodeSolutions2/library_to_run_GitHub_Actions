@@ -1,6 +1,6 @@
 {
   "name": "library_to_run_github_actions",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The purpose of this JavaScript library is to launch Backend processes on GitHub Actions, for Frontend web applications on GitHub Pages.",
   "main": "index.js",
   "scripts": {
