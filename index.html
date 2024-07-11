@@ -20,16 +20,16 @@ module.run_backend_process = run_backend_process;
 </script>
 
 <!-- Way 2 -->
-<!-- <script type="module" src="./index.js"></script> -->
+<script type="module" src="./index.js"></script>
 
 <!-- Way 3 -->
-<script type="importmap" crossorigin>
-  { 
-    "imports": {
-      "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js"
-    }
-  }
-</script>
+<!-- <script type="importmap" crossorigin> -->
+<!--   {  -->
+<!--     "imports": { -->
+<!--       "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" -->
+<!--     } -->
+<!--   } -->
+<!-- </script> -->
   
 <!-- --------------------------------------------------- -->	  
 
@@ -60,11 +60,11 @@ async function run_selection() {
 	// await module.run_backend_process(RepoAobj);
 
 	// Way 0, 2
-	// await run_backend_process(RepoAobj);
+	await run_backend_process(RepoAobj);
 
 	// Way 3
-	Promise.all([import('module')])
-		.then(async function([module]) { await module.run_backend_process(RepoAobj); })
+	// Promise.all([import('module')])
+	//	.then(async function([module]) { await module.run_backend_process(RepoAobj); })
   	
 
 }
