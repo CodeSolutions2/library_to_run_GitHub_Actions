@@ -23,10 +23,10 @@ module.run_backend_process = run_backend_process;
 <!-- <script type="module" src="./index.js"></script> -->
 
 <!-- Way 3 -->
-<script type="importmap">
+<script type="importmap" crossorigin>
   { 
     "imports": {
-      "library_to_run_github_actions": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js"
+      "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js"
     }
   }
 </script>
@@ -56,11 +56,15 @@ async function run_selection() {
 	RepoAobj.input_text = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
 	RepoAobj.repoB_name = 'frontend_backend_message_passing_central_repository_v1';
 
-	Promise.all([import('library_to_run_github_actions')])
-		.then(async function([library_to_run_github_actions]) {
-			// await module.run_backend_process(RepoAobj); // Way 1
-			await library_to_run_github_actions.run_backend_process(RepoAobj);
-		})
+	// Way 1
+	// await module.run_backend_process(RepoAobj);
+
+	// Way 0, 2
+	// await run_backend_process(RepoAobj);
+
+	// Way 3
+	Promise.all([import('module')])
+		.then(async function([module]) { await module.run_backend_process(RepoAobj); })
   	
 
 }
