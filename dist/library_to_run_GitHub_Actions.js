@@ -23,7 +23,6 @@ export async function run_backend_process(RepoAobj) {
 
 
 // ----------------------------------------------------
-
 	
 async function run_backend(obj) {
 	
@@ -79,7 +78,7 @@ async function run_backend(obj) {
 					// console.log("obj.status:", obj.status);
 					
 					if ((/^20/g).test(obj.status) == true) {
-						console.log("Match found");
+						// console.log("Match found");
 						delete obj.auth; // the variable is deleted to force it to stop the loop as quickly as possible, it will then throw an error for the while loop thus the while loop is called in a try catch to prevent errors.
 					} else {
 						obj.auth = obj.env_text; // reinitialize value to keep the value obj.auth non-visible
@@ -107,27 +106,42 @@ async function run_backend(obj) {
 export async function decode_desalt(obj, x_i) {
 	
 	// 0. Decode the Base64-encoded string --> obtain the salted data in binary string format
-	const var0_str = atob(obj.env_text);
+	const bool = await isbase64(obj.auth);
+	var var0_str;
+	if (bool == true) {
+		var0_str = atob(obj.auth);
+	} else {
+		var0_str = obj.auth;
+	}
 	
 	// 1. 'de-salt' the authorization key read from the file
 	if (x_i == 0) {
-		console.log('Remove nothing:');
+		// console.log('Remove nothing:');
 		obj.auth = await descramble_ver0(var0_str);
 	} else if (x_i <= obj.n) {
-		console.log('Remove end:');
+		// console.log('Remove end:');
 		obj.auth = var0_str.slice(0, var0_str.length - x_i);
 		obj.auth = await descramble_ver0(obj.auth);
 	} else {
-		console.log('Remove beginning:');
+		// console.log('Remove beginning:');
 		obj.auth = var0_str.slice(x_i - obj.n, var0_str.length);
 		obj.auth = await descramble_ver1(obj.auth);
 	}
-	
+	// console.log('result: ', obj.auth.slice(0,5));
   return obj;
 }
 
 // ----------------------------------------------------
 
+export async function isbase64(text) {
+	try {
+		return btoa(atob(text)) === text;
+	} catch (error) {
+		return false;
+	}
+}
+
+// ----------------------------------------------------
 
 async function descramble_ver0(var3_str) {
 	let arr = var3_str.split('').map((val, ind) => {
@@ -315,6 +329,8 @@ export async function rand_perm(x) {
 	return out;
 	
 }  // end of rand_perm
+
+// ----------------------------------------------------
 
 
 // ----------------------------------------------------
