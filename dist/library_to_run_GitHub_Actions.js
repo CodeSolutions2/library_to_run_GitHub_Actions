@@ -1,9 +1,8 @@
-export async function run_backend_process(RepoAobj) {
+// ------------------------------------------------
+// HIGHER-LEVEL PROCESS FUNCTIONS
+// ------------------------------------------------
+async function initialize_github(RepoAobj) {
 
-	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input_text, RepoAobj.repoB_name, RepoAobj.repoOwner
-	
-	// n is the maximum salt length used
-	
 	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repoB_name, RepoAobj.repoOwner);
 	
 	var obj = {env_text: obj_env.text.replace(/[\n\s]/g, ""), 
@@ -17,10 +16,22 @@ export async function run_backend_process(RepoAobj) {
 		   repoB_name: RepoAobj.repoB_name};
 
 	Object.freeze(obj.env_text); // make the original value non-changeable
+
+	return obj;
+}
+
+// ----------------------------------------------------
+
+export async function run_backend_process(RepoAobj) {
+
+	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input_text, RepoAobj.repoB_name, RepoAobj.repoOwner
+	
+	// n is the maximum salt length used
+	var obj = await initialize_github(RepoAobj);
+	
 	await run_backend(obj);
 	
 }
-
 
 // ----------------------------------------------------
 	
@@ -101,8 +112,29 @@ async function run_backend(obj) {
 		
 }
 
+// -----------------------------------------------
+
+export async function run_env_decode_desalt(RepoAobj) {
+
+  var obj = await initialize_github(RepoAobj);
+
+  obj.auth = obj.env_text; // Initialize value
+
+  obj = await decode_desalt(obj,  0);
+  
+  return obj.auth;
+}
+
 // ----------------------------------------------------
 
+
+
+
+
+
+// ----------------------------------------------------
+// SUBFUNCTIONS
+// ----------------------------------------------------
 export async function decode_desalt(obj, x_i) {
 	
 	// 0. Decode the Base64-encoded string --> obtain the salted data in binary string format
@@ -169,13 +201,6 @@ async function descramble_ver1(var3_str) {
 	return arr.filter(vals_to_Keep).join('');
 }
 	
-// ----------------------------------------------------
-
-	
-
-
-// ----------------------------------------------------
-// SUBFUNCTIONS
 // ----------------------------------------------------
 
 export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
