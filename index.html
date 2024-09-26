@@ -13,9 +13,15 @@
 <!-- Way 0 -->
 <!-- <script type="text/javascript" src="dist/library_to_run_GitHub_Actions.js"></script> -->
 
-<!-- Way 1 -->
+<!-- Way 1a -->
 <!-- <script type="module"> -->
 <!-- import { run_backend_process } from "./dist/library_to_run_GitHub_Actions.js"; -->
+<!-- module.run_backend_process = run_backend_process; -->
+<!-- </script> -->
+
+<!-- Way 1b -->
+<!-- <script type="module" redirect="follow" mode="no-cors"> -->
+<!-- import { run_backend_process } from "https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js"; -->
 <!-- module.run_backend_process = run_backend_process; -->
 <!-- </script> -->
 
