@@ -19,8 +19,8 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
   <option value="Way 1a: module .dist/library_to_run_GitHub_Actions.js">Way 1a: module .dist/library_to_run_GitHub_Actions.js</option>
   <option value="Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js">Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js</option>
   <option value="Way 2: module ./index.js">Way 2: module ./index.js</option>
-  <option value="Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js">Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js</option>
-  <option value="Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js">Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js</option>
+  <option value="Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js">Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js">Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js</option>
 </select>
 	
 <input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
@@ -59,11 +59,11 @@ module1b.run_backend_process = run_backend_process;
 <script type="module" src="./index.js"></script>
 
 <!-- Way 3 -->
-<script type="module" src="https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" crossorigin="*" redirect="follow" mode="cors"></script>
+<script type="module" src="https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js" crossorigin="*" redirect="follow" mode="cors"></script>
 	
 <!-- Way 4 -->
 <script type="importmap" crossorigin>
-{  "imports": { "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" } }
+{  "imports": { "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js" } }
 </script>
   
 <!-- --------------------------------------------------- -->	  
@@ -123,12 +123,12 @@ async function run_selection() {
 		await run_backend_process(RepoAobj);
 		// document.getElementById('notification').innerHTML = "In progress.";
 
-	} else if (package_import_methods == 'Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js') {
+	} else if (package_import_methods == 'Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js') {
 		// Way 3
 		Promise.all([import('module3')]).then(async function([module3]) { await module3.run_backend_process(RepoAobj); })
 		// Uncaught (in promise) TypeError: The specifier “module3” was a bare specifier, but was not remapped to anything. Relative module specifiers must start with “./”, “../” or “/”.
 
-	} else if (package_import_methods == 'Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js') {
+	} else if (package_import_methods == 'Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js') {
 		// Way 4
 		Promise.all([import('module4')]).then(async function([module4]) { await module4.run_backend_process(RepoAobj); })
 		
