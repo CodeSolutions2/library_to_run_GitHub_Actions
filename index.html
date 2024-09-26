@@ -125,11 +125,12 @@ async function run_selection() {
 
 	} else if (package_import_methods == 'Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js') {
 		// Way 3
-		Promise.all([import('module3')]).then(async function([module]) { await module3.run_backend_process(RepoAobj); })
+		Promise.all([import('module3')]).then(async function([module3]) { await module3.run_backend_process(RepoAobj); })
+		// Uncaught (in promise) TypeError: The specifier “module3” was a bare specifier, but was not remapped to anything. Relative module specifiers must start with “./”, “../” or “/”.
 
 	} else if (package_import_methods == 'Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js') {
 		// Way 4
-		Promise.all([import('module4')]).then(async function([module]) { await module4.run_backend_process(RepoAobj); })
+		Promise.all([import('module4')]).then(async function([module4]) { await module4.run_backend_process(RepoAobj); })
 		
 	} else {
 		document.getElementById('notification').innerHTML = "Please select package import method."; 
