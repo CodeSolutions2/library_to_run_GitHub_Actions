@@ -15,12 +15,12 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
 <label for="select_package_import_methods">Select a package import method for how to call the library:</label>
 <select name="package_import_methods" id="package_import_methods" style="display:block">
   <option value="---">Select an option</option>
-  <option value="Calling src dist/library_to_run_GitHub_Actions.js">Calling src dist/library_to_run_GitHub_Actions.js</option>
-  <option value="Calling module .dist/library_to_run_GitHub_Actions.js">Calling module .dist/library_to_run_GitHub_Actions.js</option>
-  <option value="Calling module https://codesolutions2.../dist/library_to_run_GitHub_Actions.js">Calling module https://codesolutions2.../dist/library_to_run_GitHub_Actions.js</option>
-  <option value="Calling module ./index.js">Calling module ./index.js</option>
-  <option value="Calling module https://cdn.jsdelivr.net/npm/library_to_run_github_actions">Calling module https://cdn.jsdelivr.net/npm/library_to_run_github_actions</option>
-  <option value="Calling importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions">Calling importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actionss</option>
+  <option value="Way 0: src dist/library_to_run_GitHub_Actions.js">Way 0: src dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Way 1a: module .dist/library_to_run_GitHub_Actions.js">Way 1a: module .dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js">Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Way 2: module ./index.js">Way 2: module ./index.js</option>
+  <option value="Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js">Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js</option>
+  <option value="Way4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js">Way4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js</option>
 </select>
 	
 <input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
@@ -40,10 +40,10 @@ div#error { position: relative; color: #bd1f17; }
 
 <!-- --------------------------------------------------- -->
 
-<!-- Way 0 -->
+<!-- Way 0: WORKS! -->
 <script type="text/javascript" src="dist/library_to_run_GitHub_Actions.js"></script>
 
-<!-- Way 1a -->
+<!-- Way 1a: WORKS! -->
 <script type="module">
 import { run_backend_process } from "./dist/library_to_run_GitHub_Actions.js";
 module1a.run_backend_process = run_backend_process;
@@ -104,28 +104,28 @@ async function run_selection() {
 	// console.log('package_import_methods: ', package_import_methods);
 
 	
-	if (package_import_methods == 'Calling src dist/library_to_run_GitHub_Actions.js') {
+	if (package_import_methods == 'Way 0: src dist/library_to_run_GitHub_Actions.js') {
 		// Way 0
 		await run_backend_process(RepoAobj);
 		
-	} else if (package_import_methods == 'Calling module .dist/library_to_run_GitHub_Actions.js') {
+	} else if (package_import_methods == 'Way 1a: module .dist/library_to_run_GitHub_Actions.js') {
 		// Way 1a
 		await module1a.run_backend_process(RepoAobj);
 		
-	} else if (package_import_methods == 'Calling module https://codesolutions2.../dist/library_to_run_GitHub_Actions.js') {
+	} else if (package_import_methods == 'Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js') {
 		// Way 1b
 		await module1b.run_backend_process(RepoAobj);
 		
-	} else if (package_import_methods == 'Calling module ./index.js') {
+	} else if (package_import_methods == 'Way 2: module ./index.js') {
 		// Way 2
 		await run_backend_process(RepoAobj);
 		// document.getElementById('notification').innerHTML = "In progress.";
 
-	} else if (package_import_methods == 'Calling module https://cdn.jsdelivr.net/npm/library_to_run_github_actions') {
+	} else if (package_import_methods == 'Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js') {
 		// Way 3
 		Promise.all([import('module')]).then(async function([module]) { await module.run_backend_process(RepoAobj); })
 
-	} else if (package_import_methods == 'Calling importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions') {
+	} else if (package_import_methods == 'Way4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js') {
 		// Way 4
 		Promise.all([import('module')]).then(async function([module]) { await module.run_backend_process(RepoAobj); })
 		
@@ -137,10 +137,6 @@ async function run_selection() {
 
 // -----------------------------------------------
 
-
-
 </script>
-
-  
 </body>
 </html>
