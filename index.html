@@ -66,9 +66,17 @@ module3.run_backend_process = run_backend_process;
 	
 <!-- Way 4 -->
 <script type="importmap" crossorigin>
-{  "imports": { "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js" } }
+{
+	"imports": {
+		"library_name": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js" 
+	} 
+}
 </script>
-  
+<script type="module" redirect="follow" mode="no-cors">
+import { run_backend_process } from "library_name";
+module4.run_backend_process = run_backend_process;
+</script>
+
 <!-- --------------------------------------------------- -->	  
 	
 <script>
@@ -77,8 +85,9 @@ module3.run_backend_process = run_backend_process;
 	
 window.addEventListener('beforeunload', function() {
 	window.location.href = window.location.href + '?nocache=' + new Date().getTime();
-
+	
 	document.getElementById("package_import_methods").selectedIndex = 0;
+	document.getElementById("input_text").value = "";
 });
   
 // -----------------------------------------------
@@ -132,7 +141,7 @@ async function run_selection() {
 
 	} else if (package_import_methods == 'Way 4: importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js') {
 		// Way 4
-		Promise.all([import('module4')]).then(async function([module4]) { await module4.run_backend_process(RepoAobj); })
+		await module4.run_backend_process(RepoAobj);
 		
 	} else {
 		document.getElementById('notification').innerHTML = "Please select package import method."; 
