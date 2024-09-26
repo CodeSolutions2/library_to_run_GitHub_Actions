@@ -3,51 +3,86 @@
 <head></head>
 <body>
 
+<h1>Instruction guide for calling this GitHub REST API encryption key library</h1>
+GitHub REST API requires that a GitHub repository key is used to validate the REST API request. However, on the frontend, it is considered unsafe to put a key in the code. Thus, this library was created to obtain a GitHub repository key by performing a REST API GET (a process that does not require a key) on the frontend, on an encrypted repository file to obtain an encrypted GitHub repository key. The library then decrypts the encrypted key and performs the needed GitHub REST API requests (PUT, DELETE, etc).
+<ol type="A">
+	<li>Select a package import method for how to call the library using the dropdown.</li>
+	<li>Enter text in the textarea.</li>
+  	<li>Click Run selection. This example, pulls the encrypted GitHub key from another repository (RepoB=library_encryption_class), and saves the textarea message in a folder called library_to_run_GitHub_Actions in RepoB.</li>
+</ol>
 
+<!-- Drop down menu -->
+<label for="select_package_import_methods">Select a package import method for how to call the library:</label>
+<select name="package_import_methods" id="package_import_methods" style="display:block">
+  <option value="---">Select an option</option>
+  <option value="Calling src dist/library_to_run_GitHub_Actions.js">Calling src dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Calling module .dist/library_to_run_GitHub_Actions.js">Calling module .dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Calling module https://codesolutions2.../dist/library_to_run_GitHub_Actions.js">Calling module https://codesolutions2.../dist/library_to_run_GitHub_Actions.js</option>
+  <option value="Calling module ./index.js">Calling module ./index.js</option>
+  <option value="Calling module https://cdn.jsdelivr.net/npm/library_to_run_github_actions">Calling module https://cdn.jsdelivr.net/npm/library_to_run_github_actions</option>
+  <option value="Calling importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions">Calling importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actionss</option>
+</select>
+	
 <input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
 <button id="run_selection" onclick="run_selection()">Run Selection</button>
+<br>
+<div id="notification"></div>
+<br>
+<div id="error"></div>
 
+<!-- --------------------------------------------------- -->
+<!-- CSS -->
+<style>
+div { padding: 10px; display:block; font-family:courier; font-size:15px; }
+div#notification { position: relative; color: #3236a8; }
+div#error { position: relative; color: #bd1f17; }
+</style>
 
 <!-- --------------------------------------------------- -->
 
 <!-- Way 0 -->
-<!-- <script type="text/javascript" src="dist/library_to_run_GitHub_Actions.js"></script> -->
+<script type="text/javascript" src="dist/library_to_run_GitHub_Actions.js"></script>
 
 <!-- Way 1a -->
-<!-- <script type="module"> -->
-<!-- import { run_backend_process } from "./dist/library_to_run_GitHub_Actions.js"; -->
-<!-- module.run_backend_process = run_backend_process; -->
-<!-- </script> -->
+<script type="module">
+import { run_backend_process } from "./dist/library_to_run_GitHub_Actions.js";
+module1a.run_backend_process = run_backend_process;
+</script>
 
 <!-- Way 1b -->
-<!-- <script type="module" redirect="follow" mode="no-cors"> -->
-<!-- import { run_backend_process } from "https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js"; -->
-<!-- module.run_backend_process = run_backend_process; -->
-<!-- </script> -->
+<script type="module" redirect="follow" mode="no-cors">
+import { run_backend_process } from "https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js";
+module1b.run_backend_process = run_backend_process;
+</script>
 
-<!-- Way 2 -->
+<!-- Way 2: WORKS! -->
 <script type="module" src="./index.js"></script>
 
 <!-- Way 3 -->
-<!-- <script type="module" src="https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" crossorigin="*" redirect="follow" mode="cors"></script> -->
+<script type="module" src="https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" crossorigin="*" redirect="follow" mode="cors"></script>
 	
 <!-- Way 4 -->
-<!-- <script type="importmap" crossorigin> -->
-<!--   {  -->
-<!--     "imports": { -->
-<!--       "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" -->
-<!--     } -->
-<!--   } -->
-<!-- </script> -->
+<script type="importmap" crossorigin>
+{  "imports": { "module": "https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/index.min.js" } }
+</script>
   
 <!-- --------------------------------------------------- -->	  
 	
 <script>
+
+// -----------------------------------------------
+	
+window.addEventListener('beforeunload', function() {
+	window.location.href = window.location.href + '?nocache=' + new Date().getTime();
+
+	document.getElementById("package_import_methods").selectedIndex = 0;
+});
   
 // -----------------------------------------------
 
 // Way 1
-// const module = {};
+const module1a = {};
+const module1b = {};
 
 // -----------------------------------------------
 
@@ -64,16 +99,39 @@ async function run_selection() {
 	RepoAobj.input_text = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
 	RepoAobj.repoB_name = 'library_encryption_class';
 
-	// Way 1
-	// await module.run_backend_process(RepoAobj);
+	// Call the library
+	var package_import_methods = document.getElementById("package_import_methods").value;
+	// console.log('package_import_methods: ', package_import_methods);
 
-	// Way 0, 2
-	await run_backend_process(RepoAobj);
+	
+	if (package_import_methods == 'Calling src dist/library_to_run_GitHub_Actions.js') {
+		// Way 0
+		await run_backend_process(RepoAobj);
+		
+	} else if (package_import_methods == 'Calling module .dist/library_to_run_GitHub_Actions.js') {
+		// Way 1a
+		await module1a.run_backend_process(RepoAobj);
+		
+	} else if (package_import_methods == 'Calling module https://codesolutions2.../dist/library_to_run_GitHub_Actions.js') {
+		// Way 1b
+		await module1b.run_backend_process(RepoAobj);
+		
+	} else if (package_import_methods == 'Calling module ./index.js') {
+		// Way 2
+		await run_backend_process(RepoAobj);
+		// document.getElementById('notification').innerHTML = "In progress.";
 
-	// Way 3
-	// Promise.all([import('module')])
-	//	.then(async function([module]) { await module.run_backend_process(RepoAobj); })
-  	
+	} else if (package_import_methods == 'Calling module https://cdn.jsdelivr.net/npm/library_to_run_github_actions') {
+		// Way 3
+		Promise.all([import('module')]).then(async function([module]) { await module.run_backend_process(RepoAobj); })
+
+	} else if (package_import_methods == 'Calling importmap https://cdn.jsdelivr.net/npm/library_to_run_github_actions') {
+		// Way 4
+		Promise.all([import('module')]).then(async function([module]) { await module.run_backend_process(RepoAobj); })
+		
+	} else {
+		document.getElementById('notification').innerHTML = "Please select a timeseries data source."; 
+	}
 
 }
 
