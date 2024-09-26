@@ -1,3 +1,14 @@
+export async function run_backend_process(RepoAobj) {
+
+	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input_text, RepoAobj.repoB_name, RepoAobj.repoOwner
+	
+	// n is the maximum salt length used
+	var obj = await initialize_github(RepoAobj);
+	
+	await run_backend(obj);
+	
+}
+
 // ------------------------------------------------
 // HIGHER-LEVEL PROCESS FUNCTIONS
 // ------------------------------------------------
@@ -18,19 +29,6 @@ async function initialize_github(RepoAobj) {
 	Object.freeze(obj.env_text); // make the original value non-changeable
 
 	return obj;
-}
-
-// ----------------------------------------------------
-
-export async function run_backend_process(RepoAobj) {
-
-	// RepoAobj.repoOwner, RepoAobj.repoA_name, RepoAobj.foldername, RepoAobj.filename, RepoAobj.input_text, RepoAobj.repoB_name, RepoAobj.repoOwner
-	
-	// n is the maximum salt length used
-	var obj = await initialize_github(RepoAobj);
-	
-	await run_backend(obj);
-	
 }
 
 // ----------------------------------------------------
