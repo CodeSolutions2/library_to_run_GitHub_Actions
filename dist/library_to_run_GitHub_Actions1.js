@@ -10,7 +10,7 @@ export async function save_text_input_in_repository_file_process(RepoAobj) {
 // ------------------------------------------------
 export async function initialize_github(RepoAobj) {
 
-	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repo_name, RepoAobj.repoOwner);
+	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repoB_name, RepoAobj.repoOwner);
 
 	// n is the maximum salt length used
 	var obj = {env_text: obj_env.text.replace(/[\n\s]/g, ""), 
@@ -21,7 +21,7 @@ export async function initialize_github(RepoAobj) {
 		   filename: RepoAobj.filename, 
 		   foldername: RepoAobj.foldername, 
 		   input_text: RepoAobj.input_text, 
-		   repo_name: RepoAobj.repo_name};
+		   repoB_name: RepoAobj.repoB_name};
 
 	Object.freeze(obj.env_text); // make the original value non-changeable
 
@@ -47,6 +47,7 @@ export async function decrypt_GitHub_key_from_repository_file(RepoAobj) {
 export async function encrypt_GitHub_key_and_save_to_repository_file(obj) {
 
 	// Purpose: Resave the decrypted key (obj.auth) in a repository file.
+	// This is equivalent to encrypt_text_with_salt, 
 
 	// [0] If you desire to re-encrypt an existing GitHub key that is encrypted in a file in the repository. 
 	// Obtain an existing decrypted GitHub key in a repository file. 
@@ -71,18 +72,24 @@ export async function encrypt_GitHub_key_and_save_to_repository_file(obj) {
 	// Use a .yaml workflow (reset_key_automatically.yaml) to encrypt the GitHub key in a repository file
 	// --------------------------------
 	
-	const new_auth1 = await resalt_auth(obj.auth, obj);
+	obj.decrypted_file_contents = obj.auth;
 	
+	obj = await add_salt_to_text(obj);
+	obj = await encrypt_text_without_salt(obj);
+
+	// newauth is obj.encrypted_file_contents
+
 	// --------------------------------
 
 	// The key is base64_decoded so that the key is hidden in the file
-	await PUT_add_to_a_file_RESTAPI(obj.auth, 'resave the new value', btoa(new_auth1), obj.env_desired_path, obj.env_sha);
+	await PUT_add_to_a_file_RESTAPI(obj.auth, 'resave the new value', btoa(obj.encrypted_file_contents), obj.env_desired_path, obj.env_sha);
+	
 }
 
 // ----------------------------------------------------
 
-export async function encrypt_text_with_salt(obj) {
-
+async function add_salt_to_text(obj) {
+	
 	obj = await create_salt(obj);
 	
 	// Add salt
@@ -94,11 +101,15 @@ export async function encrypt_text_with_salt(obj) {
 		obj.decrypted_file_contents = obj.decrypted_file_contents+obj.salt;
 	}
 	delete obj.salt;
-
-	// --------------------------------
 	
-	// Scramble : Github automatically base64 decodes and searches the strings and can find the key, causing GitHub to disactivate the key automatically for security
-	// obtain even values of string
+	return obj;
+}
+
+// ----------------------------------------------------
+
+export async function encrypt_text(obj) {
+	
+	// Scramble 
 	obj.encrypted_file_contents = obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 == 0) { return val; } }).join('') + "|" + obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 != 0) { return val; } }).join('');
 	// console.log('obj.encrypted_file_contents:', obj.encrypted_file_contents);
 	
@@ -107,7 +118,32 @@ export async function encrypt_text_with_salt(obj) {
 
 // ----------------------------------------------------
 
+async function encrypt_text_without_salt(obj) {
 
+	obj.decrypted_file_contents = obj.input_text;
+
+	obj = await encrypt_text(obj);
+	// encrypted text is in obj.encrypted_file_contents
+
+	return obj;
+}
+
+// ----------------------------------------------------
+
+async function decrypt_text_without_salt(obj) {
+
+	var obj_file = await GET_text_from_file_wo_auth_GitHub_RESTAPI(RepoAobj.filename, RepoAobj.foldername, RepoAobj.repoB_name, RepoAobj.repoOwner);
+
+	obj.encrypted_file_contents = obj_file.text; 
+	obj.file_file_download_url = obj_file.file_download_url;
+	obj.file_sha = obj_file.sha;
+
+	obj = await decode_desalt(obj, 0);
+
+	return obj.decrypted_file_contents;
+}
+
+// ----------------------------------------------------
 
 
 
@@ -185,9 +221,9 @@ export async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, re
 
 // ----------------------------------------------------
 
-export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repo_name, repoOwner) {
+export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
-	return await GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repo_name, repoOwner)
+	return await GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner)
 		.then(async function (obj) {
 			var text = "";
 			if (obj.file_download_url != ["No_file_found"]) {
@@ -203,10 +239,10 @@ export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename
 
 // ----------------------------------------------------
 
-export async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repo_name, repoOwner) {
+export async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
 	// Returns an object of values that are an array
-	var url = `https://api.github.com/repos/${repoOwner}/${repo_name}/contents`;
+	var url = `https://api.github.com/repos/${repoOwner}/${repoB_name}/contents`;
 	// console.log('url: ', url);
 
 	var data = await fetch(url).then(res => res.json());
@@ -304,11 +340,15 @@ async function decrypt_GitHub_key(obj) {
 	try {
 		while ((/^20/g).test(obj.status) == false && obj.auth != null && i < (obj.n*2)+1) {
 			
+			obj.encrypted_file_contents = obj.auth;
+			
 			obj = await decode_desalt(obj,  x_rand[i])
 				.then(async function(obj) {
 					
+					obj.auth = obj.decrypted_file_contents;
+					
 					// Test getting repository content
-					obj.status = await GET_repository_content(obj.auth, obj.foldername+"/"+obj.filename, obj.repo_name, obj.repoOwner)
+					obj.status = await GET_repository_content(obj.auth, obj.foldername+"/"+obj.filename, obj.repoB_name, obj.repoOwner)
 						.then(async function(out) { return out.status; })
 						.catch(error => { console.log("error: ", error); });
 			 		
@@ -352,10 +392,10 @@ async function decrypt_GitHub_key(obj) {
 async function save_text_input_in_repository_file(obj) {
 	
 	// Try each of the 'de-salted' authorization keys to identify the correct key: loop over a REST API request and identify which key succeeds. The salt parameter obj.n can range from 0 to n.
-	// console.log('obj.repo_name: ', obj.repo_name);
+	// console.log('obj.repoB_name: ', obj.repoB_name);
 	
 	// [0] Determine if filename exists
-	var obj_temp = await GET_fileDownloadUrl_and_sha(obj.filename, obj.foldername, obj.repo_name, obj.repoOwner)
+	var obj_temp = await GET_fileDownloadUrl_and_sha(obj.filename, obj.foldername, obj.repoB_name, obj.repoOwner)
 
 	// [1] Add obj_env and obj_temp to the general object (obj)
 	// obj.env_text
@@ -382,18 +422,22 @@ async function save_text_input_in_repository_file(obj) {
 
 	try {
 		while ((/^20/g).test(obj.status) == false && obj.auth != null && i < (obj.n*2)+1) {
+
+			obj.encrypted_file_contents = obj.auth;
 			
 			obj = await decode_desalt(obj,  x_rand[i])
 				.then(async function(obj) {
+
+					obj.auth = obj.decrypted_file_contents;
 					
 					if (obj.temp_file_download_url == "No_file_found") {
 						// Option 0: create a new file
-					  	obj.status = await PUT_create_a_file_RESTAPI(obj.auth, 'create a new file', obj.input_text, obj.foldername+"/"+obj.filename, obj.repo_name, obj.repoOwner)
+					  	obj.status = await PUT_create_a_file_RESTAPI(obj.auth, 'create a new file', obj.input_text, obj.foldername+"/"+obj.filename, obj.repoB_name, obj.repoOwner)
 					 		.then(async function(out) { obj.auth = ""; return out.status; })
 		 			 		.catch(error => { console.log("error: ", error); });
 			 		} else {
 						// Option 1: modify an existing file
-				 	 	obj.status = await PUT_add_to_a_file_RESTAPI(obj.auth, 'modify an existing file', obj.input_text, obj.temp_desired_path, obj.temp_sha, obj.repo_name, obj.repoOwner)
+				 	 	obj.status = await PUT_add_to_a_file_RESTAPI(obj.auth, 'modify an existing file', obj.input_text, obj.temp_desired_path, obj.temp_sha, obj.repoB_name, obj.repoOwner)
 					 		.then(async function(out) { obj.auth = ""; return out.status; })
 		 			 		.catch(error => { console.log("error: ", error); });
 			 		}
@@ -431,28 +475,28 @@ async function save_text_input_in_repository_file(obj) {
 async function decode_desalt(obj, x_i) {
 	
 	// 0. Decode the Base64-encoded string --> obtain the salted data in binary string format
-	const bool = await isbase64(obj.auth);
+	const bool = await isbase64(obj.encrypted_file_contents);
 	var var0_str;
 	if (bool == true) {
-		var0_str = atob(obj.auth);
+		var0_str = atob(obj.encrypted_file_contents);
 	} else {
-		var0_str = obj.auth;
+		var0_str = obj.encrypted_file_contents;
 	}
 	
 	// 1. 'de-salt' the authorization key read from the file
 	if (x_i == 0) {
 		// console.log('Remove nothing:');
-		obj.auth = await descramble_ver0(var0_str);
+		obj.decrypted_file_contents = await descramble_ver0(var0_str);
 	} else if (x_i <= obj.n) {
 		// console.log('Remove end:');
-		obj.auth = var0_str.slice(0, var0_str.length - x_i);
-		obj.auth = await descramble_ver0(obj.auth);
+		obj.encrypted_file_contents = var0_str.slice(0, var0_str.length - x_i);
+		obj.decrypted_file_contents = await descramble_ver0(obj.encrypted_file_contents);
 	} else {
 		// console.log('Remove beginning:');
-		obj.auth = var0_str.slice(x_i - obj.n, var0_str.length);
-		obj.auth = await descramble_ver1(obj.auth);
+		obj.encrypted_file_contents = var0_str.slice(x_i - obj.n, var0_str.length);
+		obj.decrypted_file_contents = await descramble_ver1(obj.encrypted_file_contents);
 	}
-	// console.log('result: ', obj.auth.slice(0,5));
+	// console.log('result: ', obj.decrypted_file_contents.slice(0,5));
   return obj;
 }
 
@@ -572,33 +616,6 @@ async function create_salt(obj) {
 	}
 
 	return obj;
-}
-
-// ----------------------------------------------------
-
-async function resalt_auth(new_auth, obj) {
-	
-	// Add salt to auth_new
-	if (Math.round(Math.random()) == 0) {
-		// salt front
-		new_auth = obj.salt+new_auth;
-	} else {
-		// salt back
-		new_auth = new_auth+obj.salt;
-	}
-	delete obj.salt;
-
-	// --------------------------------
-	
-	// Scramble key : Github automatically base64 decodes and searches the strings and can find the key, causing GitHub to disactivate the key automatically for security
-	
-	// obtain even values of string
-	let ep = new_auth.map((val) => { if (val % 2 == 0) { return val; } });
-
-	// obtain odd values of string
-	let ap = new_auth.map((val) => { if (val % 2 != 0) { return val; } });
-
-	return ep + "|" + ap;
 }
 
 // ----------------------------------------------------
