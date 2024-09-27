@@ -1,4 +1,6 @@
-export async function save_text_input_in_repository_file_process(RepoAobj) {
+export { save_text_input_in_repository_file_process, initialize_github, DELETE_a_file_RESTAPI };
+
+async function save_text_input_in_repository_file_process(RepoAobj) {
 	
 	// This function was previously called run_backend_process(obj), it was changed to save_text_input_in_repository_file_process(obj) for better clarity.
 	var obj = await initialize_github(RepoAobj);
