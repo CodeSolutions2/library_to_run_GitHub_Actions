@@ -389,12 +389,12 @@ async function save_text_input_in_repository_file(obj) {
 					
 					if (obj.temp_file_download_url == "No_file_found") {
 						// Option 0: create a new file
-					  	obj.status = await PUT_create_a_file_RESTAPI(obj.auth, 'run GitHub Action', obj.input_text, obj.foldername+"/"+obj.filename, obj.repo_name, obj.repoOwner)
+					  	obj.status = await PUT_create_a_file_RESTAPI(obj.auth, 'create a new file', obj.input_text, obj.foldername+"/"+obj.filename, obj.repo_name, obj.repoOwner)
 					 		.then(async function(out) { obj.auth = ""; return out.status; })
 		 			 		.catch(error => { console.log("error: ", error); });
 			 		} else {
 						// Option 1: modify an existing file
-				 	 	obj.status = await PUT_add_to_a_file_RESTAPI(obj.auth, 'run GitHub Action', obj.input_text, obj.temp_desired_path, obj.temp_sha, obj.repo_name, obj.repoOwner)
+				 	 	obj.status = await PUT_add_to_a_file_RESTAPI(obj.auth, 'modify an existing file', obj.input_text, obj.temp_desired_path, obj.temp_sha, obj.repo_name, obj.repoOwner)
 					 		.then(async function(out) { obj.auth = ""; return out.status; })
 		 			 		.catch(error => { console.log("error: ", error); });
 			 		}
