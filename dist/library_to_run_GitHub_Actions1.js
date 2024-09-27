@@ -88,36 +88,6 @@ export async function encrypt_GitHub_key_and_save_to_repository_file(obj) {
 
 // ----------------------------------------------------
 
-async function add_salt_to_text(obj) {
-	
-	obj = await create_salt(obj);
-	
-	// Add salt
-	if (Math.round(Math.random()) == 0) {
-		// salt front
-		obj.decrypted_file_contents = obj.salt+obj.decrypted_file_contents;
-	} else {
-		// salt back
-		obj.decrypted_file_contents = obj.decrypted_file_contents+obj.salt;
-	}
-	delete obj.salt;
-	
-	return obj;
-}
-
-// ----------------------------------------------------
-
-export async function encrypt_text(obj) {
-	
-	// Scramble 
-	obj.encrypted_file_contents = obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 == 0) { return val; } }).join('') + "|" + obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 != 0) { return val; } }).join('');
-	// console.log('obj.encrypted_file_contents:', obj.encrypted_file_contents);
-	
-	return obj;
-}
-
-// ----------------------------------------------------
-
 async function encrypt_text_without_salt(obj) {
 
 	obj.decrypted_file_contents = obj.input_text;
@@ -615,6 +585,36 @@ async function create_salt(obj) {
 		obj.salt = "";
 	}
 
+	return obj;
+}
+
+// ----------------------------------------------------
+
+async function add_salt_to_text(obj) {
+	
+	obj = await create_salt(obj);
+	
+	// Add salt
+	if (Math.round(Math.random()) == 0) {
+		// salt front
+		obj.decrypted_file_contents = obj.salt+obj.decrypted_file_contents;
+	} else {
+		// salt back
+		obj.decrypted_file_contents = obj.decrypted_file_contents+obj.salt;
+	}
+	delete obj.salt;
+	
+	return obj;
+}
+
+// ----------------------------------------------------
+
+async function encrypt_text(obj) {
+	
+	// Scramble 
+	obj.encrypted_file_contents = obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 == 0) { return val; } }).join('') + "|" + obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 != 0) { return val; } }).join('');
+	// console.log('obj.encrypted_file_contents:', obj.encrypted_file_contents);
+	
 	return obj;
 }
 
