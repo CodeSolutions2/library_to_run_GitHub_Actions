@@ -230,7 +230,7 @@ async function descramble_ver1(var3_str) {
 
 export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
 	
-	// PUT content into a new file
+	// PUT content into a new file: https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
 	var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
 	var data = {"message": message, "committer":{"name":"App name","email":"App email"}, "content": btoa(content)};
 	var headers = {"Accept": "application/vnd.github+json", "Authorization": `Bearer ${auth}`, "X-GitHub-Api-Version": "2022-11-28"};
@@ -245,7 +245,7 @@ export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_
 
 export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
 	
-	// PUT content into an existing file
+	// PUT content into an existing file: https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
 	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
 	var data = {"message": message, "committer":{"name":"App name","email":"App email"}, "content": btoa(content), "sha": sha};
 	var headers = {"Accept": "application/vnd.github+json", "Authorization": `Bearer ${auth}`, "X-GitHub-Api-Version": "2022-11-28"};
@@ -259,7 +259,7 @@ export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_
 
 export async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, repoName, repoOwner) {
 	
-	// PUT content into an existing file
+	// DELETE an existing file: https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
 	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
 	var data = {"message": message, "committer":{"name":"App name","email":"App email"}, "sha": sha};
 	var headers = {"Accept": "application/vnd.github+json", "Authorization": `Bearer ${auth}`, "X-GitHub-Api-Version": "2022-11-28"};
