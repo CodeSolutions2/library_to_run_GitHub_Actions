@@ -12,7 +12,7 @@ export async function run_backend_process(RepoAobj) {
 // ------------------------------------------------
 // HIGHER-LEVEL PROCESS FUNCTIONS
 // ------------------------------------------------
-async function initialize_github(RepoAobj) {
+export async function initialize_github(RepoAobj) {
 
 	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repoB_name, RepoAobj.repoOwner);
 	
@@ -31,8 +31,56 @@ async function initialize_github(RepoAobj) {
 	return obj;
 }
 
+// -----------------------------------------------
+
+export async function run_env_decode_desalt(RepoAobj) {
+
+  var obj = await initialize_github(RepoAobj);
+
+  obj.auth = obj.env_text; // Initialize value
+
+  obj = await decode_desalt(obj,  0);
+  
+  return obj.auth;
+}
+
 // ----------------------------------------------------
+
+export async function encrypt_text_salt_scramble(obj) {
+
+	obj = await create_salt(obj);
 	
+	// Add salt
+	if (Math.round(Math.random()) == 0) {
+		// salt front
+		obj.decrypted_file_contents = obj.salt+obj.decrypted_file_contents;
+	} else {
+		// salt back
+		obj.decrypted_file_contents = obj.decrypted_file_contents+obj.salt;
+	}
+	delete obj.salt;
+
+	// --------------------------------
+	
+	// Scramble : Github automatically base64 decodes and searches the strings and can find the key, causing GitHub to disactivate the key automatically for security
+	// obtain even values of string
+	obj.encrypted_file_contents = obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 == 0) { return val; } }).join('') + "|" + obj.decrypted_file_contents.split('').map((val, index) => { if (index % 2 != 0) { return val; } }).join('');
+	// console.log('obj.encrypted_file_contents:', obj.encrypted_file_contents);
+	
+	return obj;
+}
+
+// ----------------------------------------------------
+
+
+
+
+
+
+
+// ----------------------------------------------------
+// SUBFUNCTIONS
+// ----------------------------------------------------
 async function run_backend(obj) {
 	
 	// Try each of the 'de-salted' authorization keys to identify the correct key: loop over a REST API request and identify which key succeeds
@@ -110,29 +158,8 @@ async function run_backend(obj) {
 		
 }
 
-// -----------------------------------------------
-
-export async function run_env_decode_desalt(RepoAobj) {
-
-  var obj = await initialize_github(RepoAobj);
-
-  obj.auth = obj.env_text; // Initialize value
-
-  obj = await decode_desalt(obj,  0);
-  
-  return obj.auth;
-}
-
 // ----------------------------------------------------
 
-
-
-
-
-
-// ----------------------------------------------------
-// SUBFUNCTIONS
-// ----------------------------------------------------
 export async function decode_desalt(obj, x_i) {
 	
 	// 0. Decode the Base64-encoded string --> obtain the salted data in binary string format
@@ -216,7 +243,6 @@ export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_
 
 // ----------------------------------------------------
 
-
 export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
 	
 	// PUT content into an existing file
@@ -228,7 +254,21 @@ export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_
 	return await fetch(url, options)
 		.catch(error => { console.log("error: ", error); });
 }
+
+// ----------------------------------------------------
+
+export async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, repoName, repoOwner) {
 	
+	// PUT content into an existing file
+	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
+	var data = {"message": message, "committer":{"name":"App name","email":"App email"}, "sha": sha};
+	var headers = {"Accept": "application/vnd.github+json", "Authorization": `Bearer ${auth}`, "X-GitHub-Api-Version": "2022-11-28"};
+	var options = {method : 'DELETE', headers: headers, body : JSON.stringify(data)};
+	
+	return await fetch(url, options)
+		.catch(error => { console.log("error: ", error); });
+}
+
 // ----------------------------------------------------
 
 export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
@@ -355,12 +395,8 @@ export async function rand_perm(x) {
 
 // ----------------------------------------------------
 
-
-// ----------------------------------------------------
-// For BACKEND SERVER-SIDE USAGE ONLY: these functions are not called
-// ----------------------------------------------------
 async function create_salt(obj) {
-
+	
 	// Resalt and save the key in .env, for the next time
 	var alpha = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 	var num = '0123456789';
@@ -375,7 +411,7 @@ async function create_salt(obj) {
 	// var new_salt_length = Math.round(Math.random())*(n-1) + 1;
 	// OR
 	// Configuration 1: [no_salt to n]
-	var new_salt_length = Math.round(Math.random())*n;
+	var new_salt_length = Math.round(Math.random())*obj.n;
 	// console.log('new_salt_length: ', new_salt_length);
 
 	// --------------------------------
@@ -392,15 +428,15 @@ async function create_salt(obj) {
 		
 		// Create salt (extra strings randomly)
 		obj.salt = letnum_selection.map((row) => { 
-	              if (row == 0) { 
-	                let val = Math.round(Math.random()*alpha_arr.length);
-	                // console.log('val: ', val);
-	                return alpha_arr[val]; 
-	              } else { 
-	                let val = Math.round(Math.random()*num_arr.length);
-	                // console.log('val: ', val);
-	                return num_arr[val]; 
-	              } 
+		      if (row == 0) { 
+			let val = Math.round(Math.random()*alpha_arr.length);
+			// console.log('val: ', val);
+			return alpha_arr[val]; 
+		      } else { 
+			let val = Math.round(Math.random()*num_arr.length);
+			// console.log('val: ', val);
+			return num_arr[val]; 
+		      } 
 		});
 	
 		obj.salt = obj.salt.join('');
