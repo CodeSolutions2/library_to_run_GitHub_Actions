@@ -81,7 +81,7 @@ export async function encrypt_GitHub_key_and_save_to_repository_file(obj) {
 
 // ----------------------------------------------------
 
-export async function encrypt_text_salt_scramble(obj) {
+export async function encrypt_text_with_salt(obj) {
 
 	obj = await create_salt(obj);
 	
@@ -118,7 +118,8 @@ export async function encrypt_text_salt_scramble(obj) {
 // ----------------------------------------------------
 export async function isbase64(text) {
 
-	// Test if a text string is in base64 format.
+	// Purpose: Test if a text string is in base64 format.
+	
 	try {
 		return btoa(atob(text)) === text;
 	} catch (error) {
@@ -284,8 +285,6 @@ export async function rand_perm(x) {
 // ----------------------------------------------------
 // NON-EXPORTED SUBFUNCTIONS
 // ----------------------------------------------------
-async function decrypt_any_text_ze(obj) {
-
 async function decrypt_GitHub_key(obj) {
 
 	// Decrypt a salted and scrambled GitHub token.  The salt parameter obj.n can range from 0 to n.
