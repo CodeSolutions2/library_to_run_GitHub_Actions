@@ -8,7 +8,7 @@ export async function save_text_input_in_repository_file_process(RepoAobj) {
 // ------------------------------------------------
 // HIGHER-LEVEL PROCESS FUNCTIONS
 // ------------------------------------------------
-export async function initialize_github(RepoAobj) {
+async function initialize_github(RepoAobj) {
 
 	var obj_env = await GET_text_from_file_wo_auth_GitHub_RESTAPI(".env", ".github", RepoAobj.repoB_name, RepoAobj.repoOwner);
 
@@ -30,7 +30,7 @@ export async function initialize_github(RepoAobj) {
 
 // -----------------------------------------------
 
-export async function decrypt_GitHub_key_from_repository_file(RepoAobj) {
+async function decrypt_GitHub_key_from_repository_file(RepoAobj) {
 
 	// Purpose: Decrypt an encrypted GitHub key (obj.auth) in a repository file.
 	
@@ -44,7 +44,7 @@ export async function decrypt_GitHub_key_from_repository_file(RepoAobj) {
 
 // ----------------------------------------------------
 
-export async function encrypt_GitHub_key_and_save_to_repository_file(obj) {
+async function encrypt_GitHub_key_and_save_to_repository_file(obj) {
 
 	// Purpose: Resave the decrypted key (obj.auth) in a repository file.
 	// This is equivalent to encrypt_text_with_salt, 
@@ -122,7 +122,7 @@ async function decrypt_text_without_salt(obj) {
 // ----------------------------------------------------
 // EXPORTED SUBFUNCTIONS
 // ----------------------------------------------------
-export async function isbase64(text) {
+async function isbase64(text) {
 
 	// Purpose: Test if a text string is in base64 format.
 	
@@ -135,7 +135,7 @@ export async function isbase64(text) {
 
 // ----------------------------------------------------
 
-export async function GET_repository_content(auth, desired_path, repoName, repoOwner) {
+async function GET_repository_content(auth, desired_path, repoName, repoOwner) {
 	
 	// GET repository content: a call that can test the repository key without changing anything in the repository
 	// https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
@@ -149,7 +149,7 @@ export async function GET_repository_content(auth, desired_path, repoName, repoO
 
 // ----------------------------------------------------
 
-export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
+async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner) {
 	
 	// PUT content into a new file: https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
 	var url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
@@ -163,7 +163,7 @@ export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_
 
 // ----------------------------------------------------
 
-export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
+async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner) {
 	
 	// PUT content into an existing file: https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
 	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
@@ -177,7 +177,7 @@ export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_
 
 // ----------------------------------------------------
 
-export async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, repoName, repoOwner) {
+async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, repoName, repoOwner) {
 	
 	// DELETE an existing file: https://docs.github.com/en/rest/repos/contents?apiVersion=2022-11-28
 	let url = `https://api.github.com/repos/${repoOwner}/${repoName}/contents/${desired_path}`;
@@ -191,7 +191,7 @@ export async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, re
 
 // ----------------------------------------------------
 
-export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
+async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
 	return await GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner)
 		.then(async function (obj) {
@@ -209,7 +209,7 @@ export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename
 
 // ----------------------------------------------------
 
-export async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner) {
+async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner) {
 
 	// Returns an object of values that are an array
 	var url = `https://api.github.com/repos/${repoOwner}/${repoB_name}/contents`;
@@ -264,7 +264,7 @@ export async function GET_fileDownloadUrl_and_sha(desired_filename, desired_fold
 
 // ----------------------------------------------------
 
-export async function rand_perm(x) {
+async function rand_perm(x) {
 
 	var out = [];
 	while (out.length != x.length) {
