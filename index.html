@@ -95,11 +95,12 @@ async function run_selection() {
 	var RepoAobj = {};
   
   	RepoAobj.repoOwner = 'CodeSolutions2';
+	RepoAobj.repoA_name = 'library_to_run_GitHub_Actions';
   	RepoAobj.foldername = 'library_to_run_GitHub_Actions'; // foldername in RepoB
 	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
 	RepoAobj.input_text = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
 	
-	RepoAobj.repoB_name = 'library_encryption_class';
+	RepoAobj.repoB_name = 'library_encryption_class';  
 	
 
 	// Call the library
