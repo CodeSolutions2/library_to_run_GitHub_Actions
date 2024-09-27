@@ -129,7 +129,6 @@ async function run_selection() {
 		await module3.run_backend_process(RepoAobj);
 
 	} else if (package_import_methods == "Test DELETE function using Way 1a") {
-		RepoAobj.repo_name = 'library_encryption_class';
 		var obj = await module1a.decrypt_GitHub_key_from_repository_file(RepoAobj);
 		var desired_path = obj.foldername+"/"+obj.filename;
 		await module1a.DELETE_a_file_RESTAPI(obj.auth, 'delete a file', desired_path, obj.env_sha, obj.repo_name, obj.repoOwner)
