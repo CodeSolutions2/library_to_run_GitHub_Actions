@@ -9,7 +9,7 @@ This library was inspired by the GitHub workflow called [workflow dispatch event
 
 ![alt_text](RepoA_RepoB.png)
 
-The intention of the library is to use it with GitHub Actions. When the library creates the file in RepoB (destination repository), a GitHub Actions script will automatically trigger to either run a process on the user's input or trigger another repository's (ie: RepoA (sending repository)) GitHub Actions script to run. 
+The intention of the library is to use it to trigger a GitHub Actions workflow (.yaml). When the library creates the file in RepoB (destination repository), a GitHub Actions script (.yaml) will automatically trigger in RepoB (destination repository). The .yaml script can then process user input on the Backend using any programming language (Python, bash, etc), and then save the results to a file in RepoA or RepoB. The webapp frontend can then read the results back to the user.
 
 The purpose of using an intermediate repository, RepoB, is to allow for security to RepoA. RepoB acts as a central repository with non-critical information inside of it; an encrypted file content key which can be recreated, temporary user input messages from Frontend applications, and the .yaml files for triggering processes to run. If an intrusion occured, RepoB would be vunerable to loosing non-critical information, and RepoA would just loose functional communication without loss of critical data.
 
