@@ -1,4 +1,4 @@
-export { save_text_input_in_repository_file_process, initialize_github };
+export { save_text_input_in_repository_file_process, initialize_github, decrypt_GitHub_key_from_repository_file, encrypt_GitHub_key_and_save_to_repository_file, encrypt_text_without_salt, decrypt_text_without_salt, isbase64, GET_repository_content, PUT_create_a_file_RESTAPI, PUT_add_to_a_file_RESTAPI, DELETE_a_file_RESTAPI, GET_text_from_file_wo_auth_GitHub_RESTAPI, GET_fileDownloadUrl_and_sha, rand_perm };
 
 async function save_text_input_in_repository_file_process(RepoAobj) {
 
