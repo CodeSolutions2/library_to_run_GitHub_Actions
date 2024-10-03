@@ -27,6 +27,8 @@ async function initialize_github(RepoAobj) {
 
 	Object.freeze(obj.env_text); // make the original value non-changeable
 
+	console.log('Finished initialize_github');
+	
 	return obj;
 }
 
@@ -389,8 +391,8 @@ async function save_text_input_in_repository_file(obj) {
 	var x = Array.from({ length: (obj.n*2)+1 }, (_, ind) => ind);
 	var x_rand = await rand_perm(x);
 	
-	// console.log('x: ', x);
-	// console.log('x_rand: ', x_rand);
+	console.log('x: ', x);
+	console.log('x_rand: ', x_rand);
 
 	try {
 		while ((/^20/g).test(obj.status) == false && obj.auth != null && i < (obj.n*2)+1) {
