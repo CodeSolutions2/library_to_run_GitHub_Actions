@@ -6,6 +6,8 @@ async function save_text_input_in_repository_file_process(RepoAobj) {
 	
 	// This function was previously called run_backend_process(obj), it was changed to save_text_input_in_repository_file_process(obj) for better clarity.
 	var obj = await initialize_github(RepoAobj);
+	console.log('save_text_input_in_repository_file_process - obj: ', obj);
+	
 	await save_text_input_in_repository_file(obj);
 }
 
@@ -29,7 +31,7 @@ async function initialize_github(RepoAobj) {
 
 	Object.freeze(obj.env_text); // make the original value non-changeable
 
-	console.log('obj: ', obj);
+	console.log('initialize_github - obj: ', obj);
 	
 	return obj;
 }
@@ -367,12 +369,15 @@ async function decrypt_GitHub_key(obj) {
 // This function was previously called run_backend(obj), it was changed to save_text_input_in_repository_file(obj) for better clarity.
 async function save_text_input_in_repository_file(obj) {
 	
-	// Try each of the 'de-salted' authorization keys to identify the correct key: loop over a REST API request and identify which key succeeds. The salt parameter obj.n can range from 0 to n.
-	// console.log('obj.repoB_name: ', obj.repoB_name);
+	// Try each of the 'de-salted' authorization keys to identify the correct key: loop over a REST API request and identify which key succeeds. 
+	// The salt parameter obj.n can range from 0 to n.
+	
+	console.log('save_text_input_in_repository_file - obj: ', obj);
 	
 	// [0] Determine if filename exists
 	var obj_temp = await GET_fileDownloadUrl_and_sha(obj.filename, obj.foldername, obj.repoB_name, obj.repoOwner)
-
+	console.log('obj_temp: ', obj_temp);
+	
 	// [1] Add obj_env and obj_temp to the general object (obj)
 	// obj.env_text
 	// obj.env_text = "MGV0dHN8dHMgZXQ=";  // for testing
