@@ -119,6 +119,7 @@ async function run_selection() {
 	var package_import_methods = document.getElementById("package_import_methods").value;
 	// console.log('package_import_methods: ', package_import_methods);
 
+	console.log("button clicked: BEFORE function call");
 	
 	if (package_import_methods == 'Way 0: src dist/library_to_run_GitHub_Actions.js') {
 		// Way 0 : it give a warning (Uncaught SyntaxError: export declarations may only appear at top level of a module) but it still works
@@ -143,7 +144,7 @@ async function run_selection() {
 	} else if (package_import_methods == 'TEST Updates: src dist/library_to_run_GitHub_Actions1.js') {
 		// Way 0
 		await module4.save_text_input_in_repository_file_process(RepoAobj);
-		
+		console.log("button clicked: AFTER function call");
 	} else {
 		document.getElementById('notification').innerHTML = "Please select package import method."; 
 	}
