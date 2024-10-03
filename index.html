@@ -21,7 +21,7 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
   <option value="Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js">Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js</option>
   <option value="Way 2: module ./index.js">Way 2: module ./index.js</option>
   <option value="Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js">Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js</option>
- <option value="TEST Updates: src dist/library_to_run_GitHub_Actions1.js">TEST Updates: src dist/library_to_run_GitHub_Actions1.js</option>
+ <option value="TEST UPDATES: src dist/library_to_run_GitHub_Actions1.js">TEST UPDATES: src dist/library_to_run_GitHub_Actions1.js</option>
 </select>
 
 <br>
@@ -72,9 +72,9 @@ import { run_backend_process } from "https://cdn.jsdelivr.net/npm/library_to_run
 module3.run_backend_process = run_backend_process;
 </script>
 
-<!-- TEST Updates: src dist/library_to_run_GitHub_Actions1.js -->
+<!-- TEST UPDATES: src dist/library_to_run_GitHub_Actions1.js -->
 <script type="module">
-import { save_text_input_in_repository_file_process } from "./dist/library_to_run_GitHub_Actions1.js";
+import { * } from "./dist/library_to_run_GitHub_Actions1.js";
 module4.save_text_input_in_repository_file_process = save_text_input_in_repository_file_process;
 </script>
 
@@ -141,10 +141,9 @@ async function run_selection() {
 		// Way 3
 		await module3.run_backend_process(RepoAobj);
 
-	} else if (package_import_methods == 'TEST Updates: src dist/library_to_run_GitHub_Actions1.js') {
-		// Way 0
+	} else if (package_import_methods == 'TEST UPDATES: src dist/library_to_run_GitHub_Actions1.js') {
 		await module4.save_text_input_in_repository_file_process(RepoAobj);
-		console.log("button clicked: AFTER function call");
+		
 	} else {
 		document.getElementById('notification').innerHTML = "Please select package import method."; 
 	}
