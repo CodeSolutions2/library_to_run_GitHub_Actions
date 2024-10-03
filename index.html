@@ -11,6 +11,7 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
   	<li>Click Run selection. This example uses the encrypted GitHub key from another repository (RepoB=library_encryption_class), and saves the textarea message in a folder called library_to_run_GitHub_Actions in RepoB.</li>
 </ol>
 
+<h2>[0] Select a package import method for how to call the library</h2>
 <!-- Drop down menu -->
 <label for="select_package_import_methods">Select a package import method for how to call the library:</label>
 <select name="package_import_methods" id="package_import_methods" style="display:block">
@@ -22,8 +23,15 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
   <option value="Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js">Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js</option>
  <option value="TEST Updates: src dist/library_to_run_GitHub_Actions1.js">TEST Updates: src dist/library_to_run_GitHub_Actions1.js</option>
 </select>
+
+<br><br>
 	
+<h2>[1] Type some text that you would like to save in the file cb.txt, in the folder demonstration_of_library, in this repository</h2>
 <input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
+	
+<br><br>
+
+<h2>[2] Click the button to save the input text to demonstration_of_library/cb.txt</h2>
 <button id="run_selection" onclick="run_selection()">Run Selection</button>
 <br>
 <div id="notification"></div>
