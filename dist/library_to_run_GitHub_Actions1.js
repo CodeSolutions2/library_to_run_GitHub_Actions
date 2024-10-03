@@ -1,4 +1,4 @@
-export { save_text_input_in_repository_file_process, initialize_github, DELETE_a_file_RESTAPI };
+export { save_text_input_in_repository_file_process };
 
 async function save_text_input_in_repository_file_process(RepoAobj) {
 	
