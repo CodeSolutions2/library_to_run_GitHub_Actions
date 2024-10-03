@@ -11,7 +11,7 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
   	<li>Click Run selection. This example uses the encrypted GitHub key from another repository (RepoB=library_encryption_class), and saves the textarea message in a folder called library_to_run_GitHub_Actions in RepoB.</li>
 </ol>
 
-<h2>[0] Select a package import method for how to call the library</h2>
+<h3>[0] Select a package import method for how to call the library</h3>
 <!-- Drop down menu -->
 <label for="select_package_import_methods">Select a package import method for how to call the library:</label>
 <select name="package_import_methods" id="package_import_methods" style="display:block">
@@ -24,14 +24,14 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
  <option value="TEST Updates: src dist/library_to_run_GitHub_Actions1.js">TEST Updates: src dist/library_to_run_GitHub_Actions1.js</option>
 </select>
 
-<br><br>
+<br>
 	
-<h2>[1] Type some text that you would like to save in the file cb.txt, in the folder demonstration_of_library, in this repository</h2>
+<h3>[1] Type some text that you would like to save in the file cb.txt, in the folder demonstration_of_library, in this repository</h3>
 <input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
 	
-<br><br>
+<br>
 
-<h2>[2] Click the button to save the input text to demonstration_of_library/cb.txt</h2>
+<h3>[2] Click the button to save the input text to demonstration_of_library/cb.txt</h3>
 <button id="run_selection" onclick="run_selection()">Run Selection</button>
 <br>
 <div id="notification"></div>
@@ -73,7 +73,10 @@ module3.run_backend_process = run_backend_process;
 </script>
 
 <!-- TEST Updates: src dist/library_to_run_GitHub_Actions1.js -->
-<script type="text/javascript" src="dist/library_to_run_GitHub_Actions1.js"></script>
+<script type="module">
+import { save_text_input_in_repository_file_process } from "./dist/library_to_run_GitHub_Actions1.js";
+module4.save_text_input_in_repository_file_process = save_text_input_in_repository_file_process;
+</script>
 
 <!-- --------------------------------------------------- -->	  
 	
@@ -93,7 +96,7 @@ window.addEventListener('beforeunload', function() {
 const module1a = {};
 const module1b = {};
 const module3 = {};
-
+const module4 = {};
 
 // -----------------------------------------------
 
@@ -139,7 +142,7 @@ async function run_selection() {
 
 	} else if (package_import_methods == 'TEST Updates: src dist/library_to_run_GitHub_Actions1.js') {
 		// Way 0
-		await save_text_input_in_repository_file_process(RepoAobj);
+		await module4.save_text_input_in_repository_file_process(RepoAobj);
 		
 	} else {
 		document.getElementById('notification').innerHTML = "Please select package import method."; 
