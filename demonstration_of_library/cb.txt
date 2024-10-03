@@ -1,1 +1,1 @@
-text|library_to_run_GitHub_Actions
+Way 3|library_to_run_GitHub_Actions
