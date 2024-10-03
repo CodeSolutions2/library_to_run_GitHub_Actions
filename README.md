@@ -26,5 +26,38 @@ RepoB should have the following file structure:
     - reset_key_automatically.yaml - The workflow uses a github token (with repository file contents read and write permission) from GitHub Secrets; it encrypts the token using base64 encoding, salting (additional strings added), and scrambling.  The encrypted token is saved in the .github/.env file automatically. 
 - README.md (optional)
 
+## Library versions
+The available functions that can be exported.
+
+### Version 0 (current version)
+export async function run_backend_process(RepoAobj)
+export async function initialize_github(RepoAobj)
+export async function run_env_decode_desalt(RepoAobj)
+export async function encrypt_text_salt_scramble(obj)
+export async function decode_desalt(obj, x_i)
+export async function isbase64(text)
+export async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner)
+export async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner)
+export async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, repoName, repoOwner) 
+export async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner)
+export async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner)
+export async function rand_perm(x)
+
+### Version 1 (in progress)
+async function save_text_input_in_repository_file_process(RepoAobj)
+async function initialize_github(RepoAobj)
+async function decrypt_GitHub_key_from_repository_file(RepoAobj)
+async function encrypt_GitHub_key_and_save_to_repository_file(obj)
+async function encrypt_text_without_salt(obj)
+async function decrypt_text_without_salt(obj)
+async function isbase64(text)
+async function GET_repository_content(auth, desired_path, repoName, repoOwner)
+async function PUT_create_a_file_RESTAPI(auth, message, content, desired_path, repoName, repoOwner)
+async function PUT_add_to_a_file_RESTAPI(auth, message, content, desired_path, sha, repoName, repoOwner)
+async function DELETE_a_file_RESTAPI(auth, message, desired_path, sha, repoName, repoOwner)
+async function GET_text_from_file_wo_auth_GitHub_RESTAPI(desired_filename, desired_foldername, repoB_name, repoOwner)
+async function GET_fileDownloadUrl_and_sha(desired_filename, desired_foldername, repoB_name, repoOwner)
+async function rand_perm(x)
+
 ## In progress
 - Use a standard method for GitHub encryption instead of salt/scramble: Github recommends using [libsodium-wrappers](https://docs.github.com/en/rest/guides/encrypting-secrets-for-the-rest-api?apiVersion=2022-11-28) to salt and encrypt keys. 
