@@ -20,6 +20,7 @@ GitHub REST API requires that a GitHub repository key is used to validate the RE
   <option value="Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js">Way 1b: module https://codesolutions2.github.io/library_to_run_GitHub_Actions/dist/library_to_run_GitHub_Actions.js</option>
   <option value="Way 2: module ./index.js">Way 2: module ./index.js</option>
   <option value="Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js">Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js</option>
+ <option value="TEST Updates: src dist/library_to_run_GitHub_Actions1.js">TEST Updates: src dist/library_to_run_GitHub_Actions1.js</option>
 </select>
 	
 <input id="input_text" type="text" value="" placeholder="" rows="10" cols="100" style="display:block; text-align: left; height: 50px; width:600px;">
@@ -63,6 +64,9 @@ import { run_backend_process } from "https://cdn.jsdelivr.net/npm/library_to_run
 module3.run_backend_process = run_backend_process;
 </script>
 
+<!-- TEST Updates: src dist/library_to_run_GitHub_Actions1.js -->
+<script type="text/javascript" src="dist/library_to_run_GitHub_Actions1.js"></script>
+
 <!-- --------------------------------------------------- -->	  
 	
 <script>
@@ -95,7 +99,7 @@ async function run_selection() {
 	RepoAobj.repoA_name = 'library_to_run_GitHub_Actions';
 	RepoAobj.repoB_name = 'library_to_run_GitHub_Actions';  
 	
-  	RepoAobj.foldername = 'library_to_run_GitHub_Actions'; // foldername in RepoB
+  	RepoAobj.foldername = 'demonstration_of_library'; // foldername in RepoB
 	RepoAobj.filename = 'cb.txt'; // filename to create in RepoB, in foldername
 	RepoAobj.input_text = document.getElementById("input_text").value+"|"+RepoAobj.repoA_name;
 	
@@ -124,6 +128,10 @@ async function run_selection() {
 	} else if (package_import_methods == 'Way 3: module https://cdn.jsdelivr.net/npm/library_to_run_github_actions@1.0.1/dist/library_to_run_GitHub_Actions.js') {
 		// Way 3
 		await module3.run_backend_process(RepoAobj);
+
+	} else if (package_import_methods == 'TEST Updates: src dist/library_to_run_GitHub_Actions1.js') {
+		// Way 0
+		await save_text_input_in_repository_file_process(RepoAobj);
 		
 	} else {
 		document.getElementById('notification').innerHTML = "Please select package import method."; 
