@@ -121,7 +121,7 @@ async function run_selection() {
 
 	
 	if (package_import_methods == 'Way 0: src dist/library_to_run_GitHub_Actions.js') {
-		// Way 0
+		// Way 0 : it give a warning (Uncaught SyntaxError: export declarations may only appear at top level of a module) but it still works
 		await run_backend_process(RepoAobj);
 		
 	} else if (package_import_methods == 'Way 1a: module .dist/library_to_run_GitHub_Actions.js') {
