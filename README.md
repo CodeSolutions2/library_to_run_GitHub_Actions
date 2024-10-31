@@ -15,7 +15,11 @@ The purpose of using an intermediate repository, RepoB, is to allow for security
 
 ## Example of library usage
 
-[Current working version] https://codesolutions2.github.io/library_to_run_GitHub_Actions/index.html 
+The library is available at:
+- npm: https://www.npmjs.com/package/library_to_run_github_actions
+- jsdelivr: https://www.jsdelivr.com/package/npm/library_to_run_github_actions
+
+[Example script for using the library with or without jsdelivr CDN] https://codesolutions2.github.io/library_to_run_GitHub_Actions/index.html 
 
 Inside index.html the following function is called, also different ways in which to import the library are given. Define names of the following variables: Github owner, RepoA, RepoB, the folder to put the created file inside of RepoB, the file to create in RepoB, the text to put inside the created file. This file will be in RepoA.
 
